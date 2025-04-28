@@ -6,6 +6,10 @@ from django import forms
 from django.contrib.auth import login, logout, authenticate
 from .forms import UserLoginForm
 from django.contrib.auth.decorators import login_required
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Question
+from .serializers import QuestionSerializer
 
 # Create your views here.
 def home_view(request):
@@ -52,3 +56,9 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('polls:login')
+
+class QuestionListView(APIView):
+    def get(self, request):
+        questions = Question.objects.all()
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data)
