@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Ваша корзина | GoPizza{% endblock %}
+
+{% block content %}
+    <h1>Ваша корзина</h1>
+    
+    {% if cart.items.all %}
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Ціна</th>
+                    <th>Кількість</th>
+                    <th>Сума</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.items.all %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'polls:product_detail' item.product.id %}">{{ item.product.name }}</a>
+                        </td>
+                        <td>{{ item.product.price }} грн</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.get_cost }} грн</td>
+                        <td>
+                            <a href="{% url 'polls:remove_from_cart' item.id %}" class="btn btn-danger">Видалити</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Загальна сума</strong></td>
+                    <td><strong>{{ cart.get_total_price }} грн</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <div class="cart-actions">
+            <a href="{% url 'polls:create_order' %}" class="btn">Оформити замовлення</a>
+            <a href="{% url 'polls:product_list' %}" class="btn">Продовжити покупки</a>
+        </div>
+    {% else %}
+        <p>Ваша корзина порожня.</p>
+        <a href="{% url 'polls:product_list' %}" class="btn">Перейти до меню</a>
+    {% endif %}
+{% endblock %}

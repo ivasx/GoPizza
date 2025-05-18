@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} | GoPizza{% endblock %}
+
+{% block content %}
+    <div class="product-detail">
+        <a href="{% url 'polls:product_list' %}" class="btn">← Назад до меню</a>
+        
+        <div class="product-info">
+            <div class="product-image">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="no-image">Немає зображення</div>
+                {% endif %}
+            </div>
+            
+            <div class="product-text">
+                <h1>{{ product.name }}</h1>
+                <p class="category">Категорія: {{ product.category.name }}</p>
+                <p class="price">{{ product.price }} грн</p>
+                <div class="description">
+                    <h3>Опис:</h3>
+                    <p>{{ product.description }}</p>
+                </div>
+                
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'polls:add_to_cart' %}">
+                        {% csrf_token %}
+                        {{ form.product_id }}
+                        <div class="form-group">
+                            <label for="{{ form.quantity.id_for_label }}">Кількість:</label>
+                            {{ form.quantity }}
+                        </div>
+                        <button type="submit" class="btn">Додати до корзини</button>
+                    </form>
+                {% else %}
+                    <p>
+                        <a href="{% url 'login' %}?next={{ request.path }}" class="btn">Увійдіть, щоб додати до корзини</a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

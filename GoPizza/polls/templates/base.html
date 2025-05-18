@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GoPizza - Смачна піца з доставкою{% endblock %}</title>
+    <style>
+        /* Базові стилі для демонстрації */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #ff6347;
+            color: white;
+            padding: 1rem 0;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        nav ul li {
+            margin-right: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+        .messages {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .messages .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .messages .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .messages .warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+        }
+        .messages .info {
+            background-color: #d9edf7;
+            color: #31708f;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .product-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .product-item img {
+            max-width: 100%;
+            height: auto;
+        }
+        .price {
+            font-weight: bold;
+            color: #ff6347;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #ff6347;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #e55c41;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cart-table th, .cart-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div>
+                <h1><a href="{% url 'polls:product_list' %}">GoPizza</a></h1>
+            </div>
+            <ul>
+                <li><a href="{% url 'polls:product_list' %}">Меню</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'polls:cart_detail' %}">Корзина</a></li>
+                    <li><a href="{% url 'polls:order_list' %}">Мої замовлення</a></li>
+                    {% if user.is_superuser %}
+                        <li><a href="{% url 'polls:admin_order_list' %}">Всі замовлення</a></li>
+                        <li><a href="{% url 'polls:admin_product_list' %}">Управління товарами</a></li>
+                        <li><a href="{% url 'polls:admin_user_list' %}">Користувачі</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}">Вийти ({{ user.username }})</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Увійти</a></li>
+                    <li><a href="{% url 'polls:register' %}">Зареєструватися</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 GoPizza - найкраща піцерія в місті</p>
+        </div>
+    </footer>
+</body>
+</html>

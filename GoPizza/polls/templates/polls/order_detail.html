@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Замовлення #{{ order.id }} | GoPizza{% endblock %}
+
+{% block content %}
+    <h1>Замовлення #{{ order.id }}</h1>
+    
+    <div class="order-info">
+        <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+        <p><strong>Дата:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+        <p><strong>Адреса доставки:</strong> {{ order.address }}</p>
+        <p><strong>Телефон:</strong> {{ order.phone }}</p>
+    </div>
+    
+    <div class="order-items">
+        <h2>Товари у замовленні:</h2>
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Ціна</th>
+                    <th>Кількість</th>
+                    <th>Сума</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.price }} грн</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.get_cost }} грн</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Загальна сума</strong></td>
+                    <td><strong>{{ order.get_total_cost }} грн</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <div class="order-actions">
+        <a href="{% url 'polls:order_pdf' order.id %}" class="btn">Завантажити PDF квитанцію</a>
+        <a href="{% url 'polls:order_list' %}" class="btn">Повернутися до списку замовлень</a>
+    </div>
+{% endblock %}

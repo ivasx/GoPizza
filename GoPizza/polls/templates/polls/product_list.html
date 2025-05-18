@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Меню | GoPizza{% endblock %}
+
+{% block content %}
+    <h1>Меню піцерії</h1>
+    
+    <!-- Форма пошуку -->
+    <div class="search-form">
+        <form method="get" action="{% url 'polls:product_list' %}">
+            <div class="form-group">
+                <input type="text" name="search" class="form-control" placeholder="Пошук страв..." value="{{ search_query|default:'' }}">
+                <button type="submit" class="btn">Шукати</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Фільтр за категоріями -->
+    <div class="category-filter">
+        <h3>Категорії:</h3>
+        <ul>
+            <li><a href="{% url 'polls:product_list' %}" {% if not current_category %}class="active"{% endif %}>Усі</a></li>
+            {% for category in categories %}
+                <li>
+                    <a href="{% url 'polls:product_list' %}?category={{ category.id }}" 
+                       {% if current_category == category.id|stringformat:"i" %}class="active"{% endif %}>
+                        {{ category.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Список товарів -->
+    <div class="product-list">
+        {% if products %}
+            {% for product in products %}
+                <div class="product-item">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <div class="no-image">Немає зображення</div>
+                    {% endif %}
+                    <h3>{{ product.name }}</h3>
+                    <p class="price">{{ product.price }} грн</p>
+                    <a href="{% url 'polls:product_detail' product.id %}" class="btn">Детальніше</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>На жаль, товарів не знайдено.</p>
+        {% endif %}
+    </div>
+{% endblock %}

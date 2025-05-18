@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Оформлення замовлення | GoPizza{% endblock %}
+
+{% block content %}
+    <h1>Оформлення замовлення</h1>
+    
+    <div class="order-summary">
+        <h2>Товари в кошику:</h2>
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Ціна</th>
+                    <th>Кількість</th>
+                    <th>Сума</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.product.price }} грн</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.get_cost }} грн</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Загальна сума</strong></td>
+                    <td><strong>{{ cart.get_total_price }} грн</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <div class="order-form">
+        <h2>Інформація для доставки:</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error">
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="form-actions">
+                <button type="submit" class="btn">Підтвердити замовлення</button>
+                <a href="{% url 'polls:cart_detail' %}" class="btn">Назад до кошика</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
