@@ -9,6 +9,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', views.register, name='register'),
 
+
     # Сторінки для авторизованих користувачів
     path('cart/', views.cart_detail, name='cart_detail'),
     path('cart/add/', views.add_to_cart, name='add_to_cart'),
@@ -17,6 +18,8 @@ urlpatterns = [
     path('order/<int:order_id>/', views.order_detail, name='order_detail'),
     path('order/<int:order_id>/pdf/', views.order_pdf, name='order_pdf'),
     path('orders/', views.order_list, name='order_list'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 
     # Адміністративні сторінки
     path('admin/orders/', views.admin_order_list, name='admin_order_list'),

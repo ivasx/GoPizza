@@ -1,4 +1,4 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
@@ -19,6 +19,17 @@ from reportlab.pdfbase.ttfonts import TTFont
 from io import BytesIO
 import os
 
+from io import BytesIO
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+import os
+from django.conf import settings
+
 
 # Реєстрація користувача
 def register(request):
@@ -37,8 +48,23 @@ def register(request):
             return redirect('polls:product_list')
     else:
         form = RegistrationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'polls/registration/register.html', {'form': form})
 
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('/')
+        else:
+            return render(request, 'polls/registration/login.html', {'error': 'Невірний логін або пароль'})
+    return render(request, 'polls/registration/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')
 
 # Список товарів - доступний для всіх
 def product_list(request):
@@ -177,22 +203,19 @@ def order_list(request):
 def order_pdf(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
 
-    # Створюємо PDF документ
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
 
-    # Спроба додати кирилицю
-    try:
-        pdfmetrics.registerFont(TTFont('DejaVuSans', 'DejaVuSans.ttf'))
+    font_path = os.path.join(settings.BASE_DIR, 'media/fonts', 'DejaVuSans.ttf')
+    if os.path.isfile(font_path):
+        pdfmetrics.registerFont(TTFont('DejaVuSans', font_path))
         font_name = 'DejaVuSans'
-    except:
+    else:
         font_name = 'Helvetica'
 
-    # Заголовок
     p.setFont(font_name, 16)
     p.drawString(inch, 10 * inch, f"Квитанція замовлення #{order.id}")
 
-    # Інформація про замовлення
     p.setFont(font_name, 12)
     p.drawString(inch, 9.5 * inch, f"Дата: {order.created_at.strftime('%d.%m.%Y %H:%M')}")
     p.drawString(inch, 9.2 * inch, f"Клієнт: {order.user.get_full_name() or order.user.username}")
@@ -200,24 +223,19 @@ def order_pdf(request, order_id):
     p.drawString(inch, 8.6 * inch, f"Телефон: {order.phone}")
     p.drawString(inch, 8.3 * inch, f"Статус: {dict(Order.STATUS_CHOICES).get(order.status)}")
 
-    # Таблиця товарів
     p.setFont(font_name, 12)
     p.drawString(inch, 7.7 * inch, "Товари:")
 
-    # Заголовки таблиці
     p.setFont(font_name, 10)
     p.drawString(inch, 7.3 * inch, "Назва")
     p.drawString(4 * inch, 7.3 * inch, "Ціна")
     p.drawString(5 * inch, 7.3 * inch, "Кількість")
     p.drawString(6 * inch, 7.3 * inch, "Сума")
 
-    # Лінія під заголовками
     p.line(inch, 7.2 * inch, 7 * inch, 7.2 * inch)
 
-    # Товари
     y = 7.0 * inch
     for item in order.items.all():
-        # Перевірка, чи не досягли ми кінця сторінки
         if y < 2 * inch:
             p.showPage()
             p.setFont(font_name, 10)
@@ -229,14 +247,12 @@ def order_pdf(request, order_id):
         p.drawString(6 * inch, y, f"{item.get_cost()} грн")
         y -= 0.3 * inch
 
-    # Підсумкова сума
     p.line(inch, y, 7 * inch, y)
     y -= 0.3 * inch
     p.setFont(font_name, 12)
     p.drawString(4 * inch, y, "Всього:")
     p.drawString(6 * inch, y, f"{order.get_total_cost()} грн")
 
-    # Збереження PDF
     p.showPage()
     p.save()
 

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Список замовлень | GoPizza{% endblock %}
+{% block content %}
+<h1>Ваші замовлення</h1>
+{% if orders %}
+    <div class="order-list">
+        {% for order in orders %}
+            <div class="order-item">
+                <h3>Замовлення #{{ order.id }}</h3>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <p><strong>Дата:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+                <p><strong>Сума:</strong> {{ order.get_total_cost }} грн</p>
+                <a href="{% url 'polls:order_detail' order.id %}" class="btn">Деталі</a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>У вас ще немає замовлень.</p>
+    <a href="{% url 'polls:product_list' %}" class="btn">Перейти до меню</a>
+{% endif %}
+{% endblock %}

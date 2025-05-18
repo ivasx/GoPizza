@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Зміна статусу замовлення | GoPizza {% endblock %}
+{% block content %}
+<h1>Зміна статусу замовлення #{{ order.id }}</h1>
+<div class="order-info">
+    <p><strong>Замовник:</strong> {{ order.user.username }}</p>
+    <p><strong>Дата:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+    <p><strong>Адреса доставки:</strong> {{ order.address }}</p>
+    <p><strong>Телефон:</strong> {{ order.phone }}</p>
+    <p><strong>Поточний статус:</strong> {{ order.get_status_display }}</p>
+</div>
+
+<div class="order-items">
+    <h2>Товари в замовленні:</h2>
+    <table class="cart-table">
+        <thead>
+            <tr>
+                <th>Товар</th>
+                <th>Ціна</th>
+                <th>Кількість</th>
+                <th>Сума</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.price }} грн</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.get_cost }} грн</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3"><strong>Загальна сума</strong></td>
+                <td><strong>{{ order.get_total_cost }} грн</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="status-form">
+    <h2>Змінити статус замовлення:</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn">Зберегти зміни</button>
+            <a href="{% url 'polls:admin_order_list' %}" class="btn">Назад до списку замовлень</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

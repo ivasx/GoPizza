@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | GoPizza {% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<div class="product-form">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error">
+                        {% for error in field.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn">Зберегти</button>
+            <a href="{% url 'polls:admin_product_list' %}" class="btn">Назад до списку товарів</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Управління замовленнями | GoPizza {% endblock %}
+{% block content %}
+<h1>Управління замовленнями</h1>
+{% if orders %}
+    <div class="admin-orders">
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Користувач</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>Сума</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.user.username }}</td>
+                        <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+                        <td>{{ order.get_status_display }}</td>
+                        <td>{{ order.get_total_cost }} грн</td>
+                        <td>
+                            <a href="{% url 'polls:order_detail' order.id %}" class="btn">Деталі</a>
+                            <a href="{% url 'polls:admin_order_status' order.id %}" class="btn">Змінити статус</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>Немає замовлень в системі.</p>
+{% endif %}
+{% endblock %}

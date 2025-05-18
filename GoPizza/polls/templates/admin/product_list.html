@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Управління товарами | GoPizza {% endblock %}
+{% block content %}
+<h1>Управління товарами</h1>
+<div class="admin-actions">
+    <a href="{% url 'polls:admin_product_create' %}" class="btn">Додати новий товар</a>
+</div>
+
+{% if products %}
+    <div class="admin-products">
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Зображення</th>
+                    <th>Назва</th>
+                    <th>Категорія</th>
+                    <th>Ціна</th>
+                    <th>Доступний</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" width="50">
+                            {% else %}
+                                <span>Немає</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category.name }}</td>
+                        <td>{{ product.price }} грн</td>
+                        <td>{{ product.available|yesno:"Так,Ні" }}</td>
+                        <td>
+                            <a href="{% url 'polls:admin_product_edit' product.id %}" class="btn">Редагувати</a>
+                            <a href="{% url 'polls:admin_product_delete' product.id %}" class="btn btn-danger">Видалити</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>Немає товарів в системі.</p>
+{% endif %}
+{% endblock %}

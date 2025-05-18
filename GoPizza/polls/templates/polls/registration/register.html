@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Реєстрація | GoPizza{% endblock %}
+{% block content %}
+<div class="register-form">
+<h1>Реєстрація на GoPizza</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error">
+                        {% for error in field.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="form-group">
+            <button type="submit" class="btn">Зареєструватися</button>
+        </div>
+    </form>
+    
+    <div class="login-link">
+        <p>Вже маєте акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+    </div>
+</div>
+{% endblock %}
