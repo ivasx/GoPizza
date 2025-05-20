@@ -1,24 +1,14 @@
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, Http404
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.models import User
-
+from django.http import Http404
+from django.shortcuts import render
 from polls.forms import RegistrationForm, OrderForm, ProductQuantityForm, AdminOrderStatusForm, AdminProductForm, \
     AdminPasswordChangeForm
 from polls.models import Product, Cart, CartItem, Order, OrderItem, Category
-
-import reportlab
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from io import BytesIO
-import os
-
 from io import BytesIO
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
