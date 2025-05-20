@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Список користувачів | GoPizza{% endblock %}
+{% block content %}
+<h1>Користувачі системи</h1>
+{% if users %}
+    <div class="user-list">
+        {% for user in users %}
+            <div class="user-item">
+                <h3>{{ user.username }}</h3>
+                <p><strong>Ім'я:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Дата реєстрації:</strong> {{ user.date_joined|date:"d.m.Y H:i" }}</p>
+                <p><strong>Статус:</strong> {% if user.is_superuser %}Адміністратор{% else %}Користувач{% endif %}</p>
+                <a href="{% url 'polls:admin_change_user_password' user.id %}" class="btn">Змінити пароль</a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Немає доступних користувачів.</p>
+    <a href="{% url 'polls:product_list' %}" class="btn">Повернутися до меню</a>
+{% endif %}
+{% endblock %}
