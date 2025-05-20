@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Сторінку не знайдено | GoPizza{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; margin-top: 80px;">
+    <!-- Текст -->
+    <div style="max-width: 400px; text-align: left;">
+        <h1 style="margin-bottom: 20px;">404 - Сторінку не знайдено</h1>
+        <p style="margin-bottom: 20px;">На жаль, сторінку, яку ви шукаєте, не існує або її було переміщено.</p>
+        <a href="{% url 'polls:product_list' %}" class="btn">Повернутися на головну</a>
+    </div>
+
+    <!-- Сумний кіт Персик -->
+    <div style="margin-left: 40px;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_cw9o5Ytmd7HSzvRzJ9MXPKsoCFDVraVs3g&s" alt="Сумний кіт Персик" style="width: 200px;">
+    </div>
+</div>
+{% endblock %}
