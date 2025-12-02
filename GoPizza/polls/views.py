@@ -21,7 +21,6 @@ import os
 from django.conf import settings
 
 
-# Реєстрація користувача
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)

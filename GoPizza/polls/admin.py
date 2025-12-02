@@ -1,10 +1,11 @@
 from django.contrib import admin
 from polls.models import Category, Product, Cart, CartItem, Order, OrderItem
 
-# Реєстрація моделей для адмін-панелі
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -13,20 +14,24 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['price', 'available']
     search_fields = ['name', 'description']
 
+
 class CartItemInline(admin.TabularInline):
     model = CartItem
     raw_id_fields = ['product']
     extra = 0
+
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     list_display = ['user', 'created_at', 'updated_at']
     inlines = [CartItemInline]
 
+
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ['product']
     extra = 0
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

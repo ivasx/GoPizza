@@ -3,14 +3,14 @@ from . import views
 
 app_name = 'polls'
 urlpatterns = [
-    # Сторінки для анонімних користувачів
+    # Guest pages
     path('', views.product_list, name='product_list'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', views.register, name='register'),
 
 
-    # Сторінки для авторизованих користувачів
+    # Users pages
     path('cart/', views.cart_detail, name='cart_detail'),
     path('cart/add/', views.add_to_cart, name='add_to_cart'),
     path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
@@ -21,7 +21,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
 
-    # Адміністративні сторінки
+    # Admin pages
     path('admin/orders/', views.admin_order_list, name='admin_order_list'),
     path('admin/orders/<int:order_id>/status/', views.admin_order_status, name='admin_order_status'),
     path('admin/products/', views.admin_product_list, name='admin_product_list'),
