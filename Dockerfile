@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Копіюємо весь проєкт
-COPY . .
+COPY GoPizza32 .
 
 # Відкриваємо порт
 EXPOSE 8000
