@@ -107,7 +107,7 @@ GoPizza is a comprehensive Django web application for online food ordering and r
 ```bash
 # Clone the repository
 git clone https://github.com/ivasx/GoPizza.git
-cd GoPizza
+cd config
 
 # Build and start containers
 docker-compose up --build
@@ -120,7 +120,7 @@ docker-compose up --build
 ```bash
 # Clone repository
 git clone https://github.com/ivasx/GoPizza.git
-cd GoPizza
+cd config
 
 # Create virtual environment
 python -m venv venv
@@ -153,7 +153,7 @@ GoPizza/
 │   ├── wsgi.py              # WSGI configuration
 │   └── asgi.py              # ASGI configuration
 │
-├── polls/                    # Main application
+├── store/                    # Main application
 │   ├── models.py            # Database models
 │   ├── views.py             # View controllers
 │   ├── forms.py             # Form definitions
@@ -162,7 +162,7 @@ GoPizza/
 │   ├── templates/           # HTML templates
 │   │   ├── base.html
 │   │   ├── admin/
-│   │   └── polls/
+│   │   └── store/
 │   └── migrations/          # Database migrations
 │
 ├── media/                    # User uploads
@@ -272,8 +272,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Authentication
-LOGIN_REDIRECT_URL = 'polls:product_list'
-LOGOUT_REDIRECT_URL = 'polls:product_list'
+LOGIN_REDIRECT_URL = 'store:product_list'
+LOGOUT_REDIRECT_URL = 'store:product_list'
 ```
 
 ### Docker Configuration
