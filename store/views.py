@@ -21,40 +21,6 @@ import os
 from django.conf import settings
 
 
-def register(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            # Створюємо корзину для нового користувача
-            Cart.objects.create(user=user)
-            # Автоматичний вхід після реєстрації
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            messages.success(request, f"Аккаунт створено для {username}!")
-            return redirect('store:product_list')
-    else:
-        form = RegistrationForm()
-    return render(request, 'store/registration/register.html', {'form': form})
-
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('/')
-        else:
-            return render(request, 'store/registration/login.html', {'error': 'Невірний логін або пароль'})
-    return render(request, 'store/registration/login.html')
-
-def logout_view(request):
-    logout(request)
-    return redirect('/')
-
 # Список товарів - доступний для всіх
 def product_list(request):
     categories = Category.objects.all()
