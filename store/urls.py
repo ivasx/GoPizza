@@ -1,5 +1,7 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 from . import views
+from .views import RegisterView, LoginView
 
 app_name = 'store'
 urlpatterns = [
@@ -7,7 +9,7 @@ urlpatterns = [
     path('', views.product_list, name='product_list'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('register/', views.register, name='register'),
+    path("register/", RegisterView.as_view(), name="register"),
 
 
     # Users pages
@@ -18,8 +20,8 @@ urlpatterns = [
     path('order/<int:order_id>/', views.order_detail, name='order_detail'),
     path('order/<int:order_id>/pdf/', views.order_pdf, name='order_pdf'),
     path('orders/', views.order_list, name='order_list'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
     # Admin pages
     path('admin/orders/', views.admin_order_list, name='admin_order_list'),
