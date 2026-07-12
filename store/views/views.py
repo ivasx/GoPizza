@@ -7,7 +7,8 @@ from django.http import Http404
 from django.shortcuts import render
 from store.forms import RegistrationForm, OrderForm, ProductQuantityForm, AdminOrderStatusForm, AdminProductForm, \
     AdminPasswordChangeForm
-from store.models import Product, Cart, CartItem, Order, OrderItem, Category
+from store.models import Product, Order, OrderItem, Category
+from cart.models import Cart, CartItem
 from reportlab.lib.units import inch
 from io import BytesIO
 from django.http import HttpResponse
@@ -53,53 +54,6 @@ def product_detail(request, product_id):
         'form': form
     }
     return render(request, 'store/product_detail.html', context)
-
-
-# Додавання товару до корзини - тільки для авторизованих
-@login_required
-def add_to_cart(request):
-    if request.method == 'POST':
-        form = ProductQuantityForm(request.POST)
-        if form.is_valid():
-            product_id = form.cleaned_data['product_id']
-            quantity = form.cleaned_data['quantity']
-
-            product = get_object_or_404(Product, id=product_id, available=True)
-            cart, created = Cart.objects.get_or_create(user=request.user)
-
-            # Перевірка, чи товар вже є в корзині
-            cart_item, item_created = CartItem.objects.get_or_create(
-                cart=cart,
-                product=product,
-                defaults={'quantity': quantity}
-            )
-
-            # Якщо товар вже є в корзині, оновлюємо кількість
-            if not item_created:
-                cart_item.quantity += quantity
-                cart_item.save()
-
-            messages.success(request, f"{product.name} додано до корзини!")
-            return redirect('store:cart_detail')
-
-    return redirect('store:product_list')
-
-
-# Перегляд корзини - тільки для авторизованих
-@login_required
-def cart_detail(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    return render(request, 'store/cart_detail.html', {'cart': cart})
-
-
-# Видалення товару з корзини
-@login_required
-def remove_from_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-    product_name = cart_item.product.name
-    cart_item.delete()
-    messages.success(request, f"{product_name} видалено з корзини!")
-    return redirect('store:cart_detail')
 
 
 # Оформлення замовлення

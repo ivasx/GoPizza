@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from store import views
 from store.views import admin_user_list, admin_change_user_password, admin_product_edit, admin_product_delete, \
-    admin_product_create, admin_order_list, admin_order_status
+    admin_product_create, admin_order_list, admin_order_status, RegisterView, LoginView
 
 urlpatterns = [
     path('admin/users/', admin_user_list, name='admin_user_list'),
@@ -18,9 +19,9 @@ urlpatterns = [
     path('products/<int:product_id>/', views.product_detail, name='product_detail'),
     path('admin/', admin.site.urls),
     path('', include('store.urls')),
-    path('register/', views.register, name='register'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
 ]
 
