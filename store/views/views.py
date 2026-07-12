@@ -56,11 +56,6 @@ def product_detail(request, product_id):
     return render(request, 'store/product_detail.html', context)
 
 
-# Перегляд корзини - тільки для авторизованих
-# @login_required
-def cart_detail(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    return render(request, 'store/cart_detail.html', {'cart': cart})
 
 
 # Видалення товару з корзини

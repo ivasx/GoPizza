@@ -5,7 +5,7 @@
 {% block content %}
     <h1>Ваша корзина</h1>
     
-    {% if cart.items.all %}
+    {% if cart_items %}
         <table class="cart-table">
             <thead>
                 <tr>
@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for item in cart.items.all %}
+                {% for item in cart_items %}
                     <tr>
                         <td>
                             <a href="{% url 'store:product_detail' item.product.id %}">{{ item.product.name }}</a>
@@ -26,7 +26,7 @@
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.get_cost }} грн</td>
                         <td>
-                            <a href="{% url 'store:remove_from_cart' item.id %}" class="btn btn-danger">Видалити</a>
+                            <a href="#" class="btn btn-danger">Видалити</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -34,12 +34,12 @@
             <tfoot>
                 <tr>
                     <td colspan="3"><strong>Загальна сума</strong></td>
-                    <td><strong>{{ cart.get_total_price }} грн</strong></td>
+                    <td><strong>{{ total_price }} грн</strong></td>
                     <td></td>
                 </tr>
             </tfoot>
         </table>
-        
+
         <div class="cart-actions">
             <a href="{% url 'store:create_order' %}" class="btn">Оформити замовлення</a>
             <a href="{% url 'store:product_list' %}" class="btn">Продовжити покупки</a>

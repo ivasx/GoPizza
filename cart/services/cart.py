@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 
 from store.models import Product
+from .cart_item_dto import CartItemDTO
 from ..models import Cart, CartItem
 
 
@@ -42,3 +43,18 @@ class CartService:
             CartService.add_to_cart(user, product, quantity)
 
         request.session['cart_data'] = {}
+
+    @staticmethod
+    def get_cart_items(request):
+        items = []
+        if request.user.is_authenticated:
+            cart = Cart.objects.filter(user=request.user).first()
+            for item in cart.items.all():
+                items.append(CartItemDTO(product=item.product, quantity=item.quantity))
+        else:
+            cart_data = request.session.get('cart_data', {})
+            for product_id, quantity in cart_data.items():
+                product = Product.objects.get(id=product_id)
+                items.append(CartItemDTO(product=product, quantity=quantity))
+
+        return items
