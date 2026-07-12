@@ -32,38 +32,7 @@ class Product(models.Model):
         ordering = ['name']
 
 
-class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart', verbose_name="User")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
 
-    def __str__(self):
-        return f"Cart for {self.user.username}"
-
-    def get_total_price(self):
-        """Calculate total price of items in cart"""
-        return sum(item.get_cost() for item in self.items.all())
-
-    class Meta:
-        verbose_name = "Cart"
-        verbose_name_plural = "Carts"
-
-
-class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items', verbose_name="Cart")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Product")
-    quantity = models.PositiveIntegerField(default=1, verbose_name="Quantity")
-
-    def __str__(self):
-        return f"{self.quantity} x {self.product.name}"
-
-    def get_cost(self):
-        """Calculate cost of this cart item"""
-        return self.product.price * self.quantity
-
-    class Meta:
-        verbose_name = "Cart Item"
-        verbose_name_plural = "Cart Items"
 
 
 class Order(models.Model):
