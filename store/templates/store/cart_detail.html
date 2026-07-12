@@ -4,43 +4,49 @@
 
 {% block content %}
     <h1>Ваша корзина</h1>
-    
+
     {% if cart_items %}
         <table class="cart-table">
             <thead>
-                <tr>
-                    <th>Товар</th>
-                    <th>Ціна</th>
-                    <th>Кількість</th>
-                    <th>Сума</th>
-                    <th>Дії</th>
-                </tr>
+            <tr>
+                <th>Товар</th>
+                <th>Ціна</th>
+                <th>Кількість</th>
+                <th>Сума</th>
+                <th>Дії</th>
+            </tr>
             </thead>
             <tbody>
-                {% for item in cart_items %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'store:product_detail' item.product.id %}">{{ item.product.name }}</a>
-                        </td>
-                        <td>{{ item.product.price }} грн</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>{{ item.get_cost }} грн</td>
-                        <td>
-                            <a href="#" class="btn btn-danger">Видалити</a>
-                        </td>
-                    </tr>
-                {% endfor %}
+            {% for item in cart_items %}
+                <tr>
+                    <td>
+                        <a href="{% url 'store:product_detail' item.product.id %}">{{ item.product.name }}</a>
+                    </td>
+                    <td>{{ item.product.price }} грн</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.get_cost }} грн</td>
+                    <td>
+                        <form method="post" action="{% url 'store:remove_from_cart' item.product.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    style="background: none; border: none; color: red; cursor: pointer; text-decoration: underline;">
+                                Видалити
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
             <tfoot>
-                <tr>
-                    <td colspan="3"><strong>Загальна сума</strong></td>
-                    <td><strong>{{ total_price }} грн</strong></td>
-                    <td></td>
-                </tr>
+            <tr>
+                <td colspan="3"><strong>Загальна сума</strong></td>
+                <td><strong>{{ total_price }} грн</strong></td>
+                <td></td>
+            </tr>
             </tfoot>
         </table>
 
-        <div class="cart-actions">
+        <div class="cart-actions" style="margin-top: 20px;">
             <a href="{% url 'store:create_order' %}" class="btn">Оформити замовлення</a>
             <a href="{% url 'store:product_list' %}" class="btn">Продовжити покупки</a>
         </div>

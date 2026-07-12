@@ -56,18 +56,6 @@ def product_detail(request, product_id):
     return render(request, 'store/product_detail.html', context)
 
 
-
-
-# Видалення товару з корзини
-@login_required
-def remove_from_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-    product_name = cart_item.product.name
-    cart_item.delete()
-    messages.success(request, f"{product_name} видалено з корзини!")
-    return redirect('store:cart_detail')
-
-
 # Оформлення замовлення
 @login_required
 def create_order(request):

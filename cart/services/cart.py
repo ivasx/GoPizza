@@ -58,3 +58,18 @@ class CartService:
                 items.append(CartItemDTO(product=product, quantity=quantity))
 
         return items
+
+    @staticmethod
+    def remove_from_cart(user, product_id):
+        CartItem.objects.filter(cart__user=user, product_id=product_id).delete()
+
+
+    @staticmethod
+    def remove_from_session_cart(session, product_id):
+        cart_data = session.get('cart_data', {})
+        product_id_str = str(product_id)
+
+        if product_id_str in cart_data:
+            del cart_data[product_id_str]
+            session['cart_data'] = cart_data
+            session.modified = True

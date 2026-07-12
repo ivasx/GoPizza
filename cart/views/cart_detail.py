@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.views.generic import View
-from cart.models import Cart
 from cart.services import CartService
 
 

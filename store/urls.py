@@ -3,6 +3,7 @@ from django.urls import path, include
 
 from cart.views.add_to_cart import AddToCartView
 from cart.views.cart_detail import CartDetailView
+from cart.views.remove_from_cart import RemoveFromCartView
 from . import views
 from .views import RegisterView, LoginView
 
@@ -18,7 +19,7 @@ urlpatterns = [
     # Users pages
     path('cart/', CartDetailView.as_view(), name='cart_detail'),
     path('cart/add/', AddToCartView.as_view(), name='add_to_cart'),
-    path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('cart/remove/<int:product_id>/', RemoveFromCartView.as_view(), name='remove_from_cart'),
     path('order/create/', views.create_order, name='create_order'),
     path('order/<int:order_id>/', views.order_detail, name='order_detail'),
     path('order/<int:order_id>/pdf/', views.order_pdf, name='order_pdf'),
