@@ -1,5 +1,7 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path, include
+
+from cart.views.cart import AddToCartView
 from . import views
 from .views import RegisterView, LoginView
 
@@ -14,7 +16,7 @@ urlpatterns = [
 
     # Users pages
     path('cart/', views.cart_detail, name='cart_detail'),
-    path('cart/add/', views.add_to_cart, name='add_to_cart'),
+    path('cart/add/', AddToCartView.as_view(), name='add_to_cart'),
     path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('order/create/', views.create_order, name='create_order'),
     path('order/<int:order_id>/', views.order_detail, name='order_detail'),

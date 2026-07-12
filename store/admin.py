@@ -1,6 +1,6 @@
 from django.contrib import admin
-from store.models import Category, Product, Cart, CartItem, Order, OrderItem
-
+from store.models import Category, Product, Order, OrderItem
+from cart.models import Cart, CartItem
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
